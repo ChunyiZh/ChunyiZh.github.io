@@ -33,11 +33,13 @@ for p in papers:
         p['url'] = p['scholar_url']
 papers.sort(key=lambda p: -p['year'])
 esc = html.escape
-type_labels = {'journal': 'Journal article', 'preprint': 'Preprint', 'conference': 'Conference abstract'}
+def bilingual(en, zh):
+    return f'<span data-lang="en">{esc(en)}</span><span data-lang="zh">{esc(zh)}</span>'
+type_labels = {'journal': bilingual('Journal article', '期刊论文'), 'preprint': bilingual('Preprint', '预印本'), 'conference': bilingual('Conference abstract', '会议摘要')}
 def paper_html(p):
     label = type_labels[p['type']]
     record_url = p['scholar_url'] or p['source_url']
-    record_label = 'Scholar' if p['scholar_url'] else 'Publisher'
+    record_label = 'Scholar' if p['scholar_url'] else bilingual('Publisher', '期刊官网')
     search = esc(' '.join([p['title'], p['authors'], p['venue'], str(p['year'])]).lower(), quote=True)
     return f'''<article class="publication" data-year="{p['year']}" data-type="{p['type']}" data-search="{search}">
     <h4><a href="{esc(p['url'], quote=True)}" target="_blank" rel="noopener noreferrer">{esc(p['title'])} <span aria-hidden="true">↗</span></a></h4>
@@ -53,10 +55,11 @@ notes = [
     'The microscopic origin of the dielectric decrement.',
     'Ion-induced changes in the hydrogen-bond network.',
 ]
+notes_zh = ['电场调控界面水解离的微观机制。', '解析固液界面电双层的分子结构。', '揭示盐溶液介电常数减小的微观机制。', '理解盐离子对水氢键网络的影响。']
 by_id = {p['id']:p for p in papers}
 for i, pid in enumerate(DOIS):
-    p=by_id[pid]; note=notes[i]
-    selected.append(f'''<article class="selected-work"><p class="paper-meta">{short_journals[i]} / {p['year']}</p><h3><a href="{esc(p['url'])}" target="_blank" rel="noopener noreferrer">{esc(p['title'])}</a></h3><p>{note}</p><a class="text-link" href="{esc(p['url'])}" target="_blank" rel="noopener noreferrer">Read the paper ↗</a></article>''')
+    p=by_id[pid]; note=bilingual(notes[i], notes_zh[i])
+    selected.append(f'''<article class="selected-work"><p class="paper-meta">{short_journals[i]} / {p['year']}</p><h3><a href="{esc(p['url'])}" target="_blank" rel="noopener noreferrer">{esc(p['title'])}</a></h3><p>{note}</p><a class="text-link" href="{esc(p['url'])}" target="_blank" rel="noopener noreferrer">{bilingual('Read the paper', '阅读论文')} ↗</a></article>''')
 output = (BASE/'index.template.html').read_text(encoding='utf-8')
 output = output.replace('{{PUBLICATIONS}}', archive).replace('{{SELECTED}}', '\n'.join(selected)).replace('{{YEARS}}', ''.join(f'<option value="{y}">{y}</option>' for y in years))
 output = output.replace('{{RECORD_COUNT}}', str(len(papers)))
