@@ -69,6 +69,6 @@ for asset in ['styles.css', 'app.js']:
     output = output.replace(f'"{asset}"', f'"{asset}?v={revision}"')
 assert '{{' not in output
 (BASE/'index.html').write_text(output, encoding='utf-8')
-(BASE/'publications.json').write_text(json.dumps({'source':SCHOLAR, 'retrieved':'2026-10-08', 'updated':'2026-10-10', 'additional_sources':[p['source_url'] for p in papers if p.get('source_url')], 'records':papers}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+(BASE/'publications.json').write_text(json.dumps({'source':SCHOLAR, 'retrieved':'2026-10-08', 'updated':'2026-11-21', 'additional_sources':[p['source_url'] for p in papers if p.get('source_url')], 'records':papers}, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
 (BASE/'.nojekyll').touch()
 print(f'Built {len(papers)} records: {dict(Counter(p["type"] for p in papers))}')
