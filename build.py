@@ -9,6 +9,7 @@ from collections import Counter
 BASE = Path(__file__).resolve().parent
 SCHOLAR = 'https://scholar.google.com/citations?hl=en&user=Kq_sijoAAAAJ&view_op=list_works&sortby=pubdate'
 DOIS = {
+    'wiley-adfm-79329': '10.1002/adfm.79329',
     '_kc_bZDykSQC': '10.1073/pnas.2505929122',
     'KlAtU1dfN6UC': '10.1038/s41467-024-54631-1',
     '_FxGoFyzp5QC': '10.1103/PhysRevLett.131.076801',
@@ -48,14 +49,15 @@ def paper_html(p):
 years = sorted({p['year'] for p in papers}, reverse=True)
 archive = '\n'.join(f'<section class="publication-year-group" aria-label="Publications in {y}"><h4>{y}</h4><div>'+ '\n'.join(paper_html(p) for p in papers if p['year']==y) +'</div></section>' for y in years)
 selected = []
-short_journals = ['PNAS', 'Nature Communications', 'Physical Review Letters', 'Nature Communications']
+short_journals = ['Advanced Functional Materials', 'PNAS', 'Nature Communications', 'Physical Review Letters', 'Nature Communications']
 notes = [
+    'Mechanical control of proton chemistry at oxide–water interfaces.',
     'Electric-field control of interfacial water dissociation.',
     'A molecular picture of the electrical double layer.',
     'The microscopic origin of the dielectric decrement.',
     'Ion-induced changes in the hydrogen-bond network.',
 ]
-notes_zh = ['电场调控界面水解离的微观机制。', '解析固液界面电双层的分子结构。', '揭示盐溶液介电常数减小的微观机制。', '理解盐离子对水氢键网络的影响。']
+notes_zh = ['机械应变调控氧化物–水界面的质子化学。', '电场调控界面水解离的微观机制。', '解析固液界面电双层的分子结构。', '揭示盐溶液介电常数减小的微观机制。', '理解盐离子对水氢键网络的影响。']
 by_id = {p['id']:p for p in papers}
 for i, pid in enumerate(DOIS):
     p=by_id[pid]; note=bilingual(notes[i], notes_zh[i])
